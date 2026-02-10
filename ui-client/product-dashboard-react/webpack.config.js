@@ -34,6 +34,8 @@ module.exports = {
         compress: true,
         port: 4200,
         open: true,
+        host: "0.0.0.0",
+        allowedHosts: "all",
         historyApiFallback: true,
     },
     resolve: {

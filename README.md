@@ -5,7 +5,7 @@ A full-stack application for managing and displaying products with categories.
 ## Tech Stack
 
 - **Backend**: Django 3.2 + Django REST Framework
-- **Frontend**: Angular 18
+- **Frontend**: React
 - **Database**: SQLite (development)
 
 ## Quick Start
@@ -55,10 +55,9 @@ product-showcase/
 │   ├── showcase_api/        # Main Django project
 │   └── catalog/             # Product catalog app
 │
-└── ui-client/              # Angular frontend
-    └── product-dashboard/   # Angular application
-        ├── src/
-        └── package.json
+└── ui-client/
+    ├── product-dashboard-angular/   # Angular application
+    └── product-dashboard-react/     # React application
 ```
 
 ## Access Points
@@ -87,11 +86,14 @@ python manage.py createsuperuser
 
 # Run server
 python manage.py runserver
+
+# Run backend tests
+python manage.py test
 ```
 
 ### Frontend Commands
 ```bash
-cd ui-client/product-dashboard
+cd ui-client/product-dashboard-react
 
 # Install dependencies
 npm install
@@ -101,7 +103,22 @@ npm start
 
 # Build for production
 npm run build
+
+# Run frontend tests
+npm test
 ```
+
+## Docker (recommended)
+
+From the repo root (`product-showcase/`):
+
+```bash
+docker compose up --build
+```
+
+- **UI (React)**: `http://localhost:4200`
+- **API**: `http://localhost:8000/api/`
+- **Admin**: `http://localhost:8000/admin/`
 
 ## Sharing This Project
 
@@ -133,7 +150,7 @@ To share this project with someone:
 ### Python Issues
 - **Command not found**: Make sure virtual environment is activated
 - **Module not found**: Run `pip install -r showcase_api/requirements.txt`
-- **Wrong Python version**: Use pyenv or specify `python3.11`
+- **Wrong Python version**: Django 3.2 requires Python <= 3.10. If you have Python 3.11+ (or 3.13), use Docker or install Python 3.10.
 - **pip installing to system**: Virtual environment not activated properly
   - For venv: `source venv/bin/activate` (check prompt for `(venv)`)
   - Verify with: `which pip` (should show venv path, not system)

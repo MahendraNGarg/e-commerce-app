@@ -1,5 +1,16 @@
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
+import json
+import os
+import tempfile
+
+# Map human labels to numeric choices used by Product.PRIORITY_CHOICES
+PRIORITY_MAP = {
+    'low': 1,
+    'medium': 2,
+    'high': 3,
+    'critical': 4,
+}
 
 
 class Command(BaseCommand):
@@ -9,7 +20,53 @@ class Command(BaseCommand):
         self.stdout.write('Loading initial data...')
         
         try:
-            call_command('loaddata', 'initial_data', verbosity=0)
+            # Ensure deterministic re-seeding: remove existing categories/products
+            try:
+                from catalog.models import Category, Product
+                Product.objects.all().delete()
+                Category.objects.all().delete()
+            except Exception:
+                # If models are not available for some reason, continue to loaddata
+                pass
+
+            # Load fixture file, coerce string priority labels to numeric choices
+            fixtures_dir = os.path.normpath(
+                os.path.join(os.path.dirname(__file__), '..', '..', 'fixtures')
+            )
+            src_fixture = os.path.join(fixtures_dir, 'initial_data.json')
+
+            with open(src_fixture, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+
+            changed = False
+            for obj in data:
+                if obj.get('model') == 'catalog.product':
+                    fields = obj.get('fields', {})
+                    pv = fields.get('priority')
+                    if isinstance(pv, str):
+                        key = pv.strip().lower()
+                        if key.isdigit():
+                            fields['priority'] = int(key)
+                            changed = True
+                        elif key in PRIORITY_MAP:
+                            fields['priority'] = PRIORITY_MAP[key]
+                            changed = True
+
+            # Write to a temporary fixture if we changed values, otherwise use original
+            if changed:
+                tf = tempfile.NamedTemporaryFile(delete=False, suffix='.json', mode='w', encoding='utf-8')
+                json.dump(data, tf, ensure_ascii=False, indent=2)
+                tf_name = tf.name
+                tf.close()
+                try:
+                    call_command('loaddata', tf_name, verbosity=0)
+                finally:
+                    try:
+                        os.unlink(tf_name)
+                    except Exception:
+                        pass
+            else:
+                call_command('loaddata', src_fixture, verbosity=0)
             self.stdout.write(self.style.SUCCESS(
                 'Successfully loaded sample data!'
             ))

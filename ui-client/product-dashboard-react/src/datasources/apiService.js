@@ -61,10 +61,13 @@ export const patch = async (endpoint, data) => {
   }
 };
 
-// Generic DELETE request
-export const del = async (endpoint) => {
+// Generic DELETE request (supports optional request body via `data`)
+export const del = async (endpoint, data = undefined) => {
   try {
-    await apiClient.delete(endpoint, { headers: getHeaders() });
+    // axios.delete accepts config as second arg; include data when provided
+    const config = { headers: getHeaders() };
+    if (data !== undefined) config.data = data;
+    await apiClient.delete(endpoint, config);
   } catch (error) {
     handleError(error);
   }

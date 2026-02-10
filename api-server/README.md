@@ -45,6 +45,12 @@ api-server/
 
 This project uses SQLite by default (no additional setup required). The database file `db.sqlite3` will be created automatically when you run migrations
 
+## Run tests
+
+```bash
+python manage.py test
+```
+
 
 ## Troubleshooting
 
