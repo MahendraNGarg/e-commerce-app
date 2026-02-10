@@ -1,0 +1,25 @@
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+a {
+  color: white;
+}
+
+a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}

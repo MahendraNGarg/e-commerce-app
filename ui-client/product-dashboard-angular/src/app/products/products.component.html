@@ -1,0 +1,22 @@
+    <div class="product-list-container">
+      <h2>Products</h2>
+      
+      <div class="filters">
+        <select [(ngModel)]="filters.category" (change)="loadProducts()">
+          <option [value]="undefined">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat.id">
+            {{cat.name}}
+          </option>
+        </select>
+
+      </div>
+
+      <div class="products-grid" *ngIf="!isLoading">
+        <div class="product-card" *ngFor="let product of products">
+          <h3>{{product.title}}</h3>
+          <p>Category: {{product.category_name}}</p>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading">Loading...</div>
+    </div>

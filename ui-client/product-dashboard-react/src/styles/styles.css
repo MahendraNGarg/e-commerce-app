@@ -1,0 +1,16 @@
+/* Global styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  text-decoration: underline;
+  background-color: #1e347b;
+}
+
+* {
+  box-sizing: border-box;
+}
