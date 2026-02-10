@@ -3,3 +3,4 @@ djangorestframework>=3.12
 django-cors-headers>=3.10
 django-filter>=21.0
 pillow>=8.0
+drf-spectacular>=0.26.0
